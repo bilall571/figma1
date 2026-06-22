@@ -18,6 +18,6 @@
 .vopros-text {
   display: flex;
   justify-content: space-between;
-  color: #3b82f6;
+  color: pink;
   font-weight: bold;
 }

@@ -38,13 +38,14 @@
 
 
 .telefon-kartinka {
-  width: 580px;
+  width: 650px;
   height: auto;
   flex-shrink: 0;
 }
 
 .telefon-kartinka img {
-  width: 100%;
+  width: 65%;
   height: auto;
   display: block;
+  margin: 0 auto;
 }

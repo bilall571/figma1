@@ -45,7 +45,7 @@
 }
 
 .column-links a:hover {
-  color: #3b82f6;
+  color: pink;
 }
 
 .footer-divider {
@@ -69,7 +69,7 @@
 .footer-logo {
   font-size: 24px;
   font-weight: 700;
-  color: #3b82f6;
+  color: pink;
   letter-spacing: -0.5px;
 }
 

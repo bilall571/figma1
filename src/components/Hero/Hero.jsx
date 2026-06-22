@@ -5,9 +5,9 @@ function Hero() {
   return (
     <div className="glavniy-ekran">
       <div className="left-side">
-        <h1 className="big-title">Building apps just<br/>got easier</h1>
+        <h1 className="big-title">gungan guli gulu t<br/>tutu</h1>
         <p className="small-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          bla bla bla bla bla bla bal bal bal bal bla blab laba lba bla
         </p>
         <div className="knopki-ryadom">
           <button className="knopka-blue">Get Started</button>
@@ -15,7 +15,7 @@ function Hero() {
         </div>
       </div>
       <div className="right-side">
-        <div className="telefon-kartinka"><img src={PhoneOne} alt="" /></div> 
+        <div className="telefon-kartinka"><img src={PhoneOne} alt="" /></div>
       </div>
     </div>
   );

@@ -6,9 +6,9 @@ function Header() {
     <div className="shapka">
       <div className="logo-text">Appy</div>
       <div className="menyu-ssylki">
-        <span>Product</span>
-        <span>Features</span>
-        <span>Use Cases</span>
+        <span>Home</span>
+        <span>close</span>
+        <span> About</span>
         <span>Pricing</span>
       </div>
       <div className="pravaya-chast">

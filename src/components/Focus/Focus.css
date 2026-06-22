@@ -80,7 +80,7 @@
 .focus-line-blue {
   height: 100%;
   align-self: stretch;
-  background-color: #3b82f6;
+  background-color: pink;
 }
 
 .focus-line-gray {
@@ -111,7 +111,7 @@
 
 .focus-btn-primary {
   padding: 14px 28px;
-  background-color: #3b82f6;
+  background-color: pink;
   color: white;
   border: none;
   border-radius: 6px;
@@ -122,6 +122,6 @@
 }
 
 .focus-btn-primary:hover {
-  background-color: #2563eb;
+  background-color: pink;
 }
 
