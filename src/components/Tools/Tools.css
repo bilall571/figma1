@@ -1,0 +1,102 @@
+.sekciya-tools {
+  padding: 120px 20px;
+  background-color: #ffffff;
+}
+
+.zagolovok-po-centru {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 15px;
+}
+
+.podzagolovok-po-centru {
+  text-align: center;
+  color: #666;
+  max-width: 650px;
+  margin: 0 auto 80px auto;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.flex-konteiner-tools {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+
+.telefon-sleva {
+  position: relative;
+  width: 560px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.krug-na-fone {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.PhoneTwo {
+  width: 100%;
+  height: auto;
+  z-index: 2;
+  position: relative;
+}
+
+.tekst-sprava {
+  flex: 1;
+  max-width: 500px;
+}
+
+.zagolovok-h3 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.sery-tekst {
+  color: #666;
+  line-height: 1.6;
+  font-size: 16px;
+  margin-bottom: 35px;
+}
+
+.spisok-s-sinimi-liniyami {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.punkt-spiska {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+  font-size: 18px;
+}
+
+.sinyaya-poloska {
+  width: 4px;
+  height: 24px;
+  background-color: #3b82f6;
+  margin-right: 15px;
+}
+
+@media (max-width: 1024px) {
+  .flex-konteiner-tools { flex-direction: column; text-align: center; gap: 50px; }
+  .telefon-sleva { width: 100%; max-width: 400px; }
+  .krug-na-fone { display: none; }
+  .punkt-spiska { justify-content: center; }
+}

@@ -1,0 +1,23 @@
+.voprosy-otvety {
+  padding: 50px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.voprosy-otvety h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.vopros-blok {
+  border-bottom: 1px solid #ccc;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.vopros-text {
+  display: flex;
+  justify-content: space-between;
+  color: #3b82f6;
+  font-weight: bold;
+}

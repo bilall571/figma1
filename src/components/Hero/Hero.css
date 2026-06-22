@@ -1,0 +1,50 @@
+.glavniy-ekran {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 40px;
+  background-color: #fcfcfc;
+  max-width: 1300px;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.left-side {
+  flex: 1;
+  max-width: 650px;
+}
+
+.big-title {
+  font-size: 64px;
+  color: #222;
+  margin-bottom: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.small-text {
+  color: #666;
+  margin-bottom: 35px;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.watch-video {
+  margin-left: 20px;
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+.telefon-kartinka {
+  width: 580px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.telefon-kartinka img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

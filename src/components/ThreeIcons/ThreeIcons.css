@@ -1,0 +1,25 @@
+.tri-bloka-wrap {
+  display: flex;
+  justify-content: space-around;
+  padding: 50px;
+  text-align: center;
+}
+
+.odin-blok {
+  width: 30%;
+}
+
+.kruglaya-ikona {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 15px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.red-bg { background-color: #fee2e2; color: red; }
+.yellow-bg { background-color: #fef3c7; color: orange; }
+.blue-bg { background-color: #dbeafe; color: blue; }
