@@ -58,12 +58,3 @@
   height: auto;
   display: block;
 }
-
-@media (max-width: 1024px) {
-  .pre-footer-cta {
-    flex-direction: column;
-    text-align: center;
-    padding: 80px 20px;
-  }
-  .cta-phone-mockup { max-width: 380px; }
-}

@@ -27,18 +27,3 @@
   cursor: pointer;
   margin-left: 15px;
 }
-
-/* Адаптация для мобилок */
-@media (max-width: 768px) {
-  .shapka {
-    flex-direction: column;
-    padding: 15px;
-  }
-  .menyu-ssylki {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
