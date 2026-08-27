@@ -32,7 +32,7 @@ function App() {
       <Header />
       <Hero />
       <ThreeIcons />
-      <Tools />
+      <Tools list={toolsData[0]} />
       <Focus />
       <Slider />
       <Faq />
