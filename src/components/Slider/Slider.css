@@ -72,3 +72,18 @@
 .dot-active {
   background-color: #3b82f6;
 }
+
+@media (max-width: 900px) {
+  .slider-content {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .slider-woman-container {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+  }
+  .testimonial-text {
+    font-size: 18px;
+  }
+}

@@ -23,3 +23,13 @@
 .red-bg { background-color: #fee2e2; color: red; }
 .yellow-bg { background-color: #fef3c7; color: orange; }
 .blue-bg { background-color: #dbeafe; color: blue; }
+
+@media (max-width: 768px) {
+  .tri-bloka-wrap {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .odin-blok {
+    width: 100%;
+  }
+}

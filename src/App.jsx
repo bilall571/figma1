@@ -6,8 +6,6 @@ import Tools from './components/Tools/Tools';
 import Focus from './components/Focus/Focus';
 import Slider from './/components/Slider/Slider';
 import Faq from './components/Faq/Faq';
-import MediaGallery from './components/MediaGallery/MediaGallery';
-import BottomCta from './components/BottomCta/BottomCta';
 import Footer from './components/Footer/Footer';
 import './App.css';
 
@@ -37,7 +35,6 @@ function App() {
       <Focus />
       <Slider />
       <Faq />
-      <MediaGallery />
       <BottomCta />
       <Footer />
     </div>

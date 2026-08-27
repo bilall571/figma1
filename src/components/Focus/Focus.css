@@ -125,3 +125,13 @@
   background-color: pink;
 }
 
+@media (max-width: 900px) {
+  .focus-content {
+    flex-direction: column;
+    gap: 50px;
+  }
+  .focus-section-title {
+    font-size: 32px;
+  }
+}
+

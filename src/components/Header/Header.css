@@ -27,3 +27,12 @@
   cursor: pointer;
   margin-left: 15px;
 }
+
+@media (max-width: 768px) {
+  .shapka {
+    padding: 15px 20px;
+  }
+  .menyu-ssylki {
+    display: none;
+  }
+}
