@@ -1,35 +1,29 @@
 import React from 'react';
 import './Tools.css';
-import PhoneTwo from "../../assets/Col (1).png";
 
-function Tools() {
+function Tools({ list }) {
   return (
     <div className="sekciya-tools">
-      <h2 className="zagolovok-po-centru">All the essential tools</h2>
-      <p className="podzagolovok-po-centru">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
-      </p>
+      <h2 className="zagolovok-po-centru">{list.mainTitle}</h2>
+      <p className="podzagolovok-po-centru">{list.mainSubtitle}</p>
 
       <div className="flex-konteiner-tools">
         <div className="telefon-sleva">
           <div className="krug-na-fone"></div>
-            <img src={PhoneTwo} alt="" className='PhoneTwo' />
+          <img src={list.phoneImg} alt="Tools Phone" className="PhoneTwo" />
         </div>
 
         <div className="tekst-sprava">
-          <h3 className="zagolovok-h3">Semper feugiat</h3>
-          <p className="sery-tekst">
-            Proin arcu aliquet tristique in nec adipiscing elementum dui sit. Ut in eu convallis cras vulputate ultrices amet, libero pretium felis ac id sapien facilisi.
-          </p>
+          <h3 className="zagolovok-h3">{list.rightTitle}</h3>
+          <p className="sery-tekst">{list.rightText}</p>
+
           <div className="spisok-s-sinimi-liniyami">
-            <div className="punkt-spiska">
-              <div className="sinyaya-poloska"></div>
-              <span>Malesuada feugiat magna in</span>
-            </div>
-            <div className="punkt-spiska">
-              <div className="sinyaya-poloska"></div>
-              <span>Tempus adipiscing id</span>
-            </div>
+            {list.features.map((item, index) => (
+              <div className="punkt-spiska" key={index}>
+                <div className="sinyaya-poloska"></div>
+                <span>{item.title}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
