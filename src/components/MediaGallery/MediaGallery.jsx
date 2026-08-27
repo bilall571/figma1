@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './MediaGallery.css';
 import img1 from "../../assets/Col.png";
 import img2 from "../../assets/Col (1).png";
@@ -20,10 +20,21 @@ export default function MediaGallery() {
   const [openIndex, setOpenIndex] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  // Touch/zoom state
+  const [scale, setScale] = useState(1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const initialPinchDistance = useRef(null);
+  const initialScale = useRef(1);
+  const lastTapTime = useRef(0);
 
   const openLightbox = useCallback((index) => {
     setCurrentIndex(index);
     setOpenIndex(index);
+    setScale(1);
+    setTranslate({ x: 0, y: 0 });
     document.body.style.overflow = 'hidden';
   }, []);
 
@@ -32,12 +43,14 @@ export default function MediaGallery() {
     setTimeout(() => {
       setOpenIndex(null);
       setIsAnimating(false);
+      setScale(1);
+      setTranslate({ x: 0, y: 0 });
       document.body.style.overflow = '';
     }, 300);
   }, []);
 
   const navigate = useCallback((direction) => {
-    if (isAnimating) return;
+    if (isAnimating || scale > 1) return;
     setIsAnimating(true);
     setCurrentIndex(prev => {
       const next = direction === 'next' 
@@ -45,8 +58,111 @@ export default function MediaGallery() {
         : (prev - 1 + mediaItems.length) % mediaItems.length;
       return next;
     });
+    setScale(1);
+    setTranslate({ x: 0, y: 0 });
     setTimeout(() => setIsAnimating(false), 300);
-  }, [isAnimating]);
+  }, [isAnimating, scale]);
+
+  const resetZoom = useCallback(() => {
+    setScale(1);
+    setTranslate({ x: 0, y: 0 });
+  }, []);
+
+  // Touch handlers for pinch zoom and pan
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length === 2) {
+      // Pinch start
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      initialPinchDistance.current = distance;
+      initialScale.current = scale;
+      e.preventDefault();
+    } else if (e.touches.length === 1 && scale > 1) {
+      // Pan start
+      dragStart.current = {
+        x: e.touches[0].clientX - translate.x,
+        y: e.touches[0].clientY - translate.y
+      };
+      setIsDragging(true);
+    }
+  }, [scale, translate]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (e.touches.length === 2 && initialPinchDistance.current) {
+      // Pinch zoom
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      const newScale = Math.min(Math.max(initialScale.current * (distance / initialPinchDistance.current), 1), 4);
+      setScale(newScale);
+      e.preventDefault();
+    } else if (e.touches.length === 1 && isDragging && scale > 1) {
+      // Pan
+      const newX = e.touches[0].clientX - dragStart.current.x;
+      const newY = e.touches[0].clientY - dragStart.current.y;
+      setTranslate({ x: newX, y: newY });
+      e.preventDefault();
+    }
+  }, [isDragging, scale]);
+
+  const handleTouchEnd = useCallback((e) => {
+    if (e.touches.length < 2) {
+      initialPinchDistance.current = null;
+    }
+    if (e.touches.length === 0) {
+      setIsDragging(false);
+    }
+    
+    // Double tap to zoom
+    const now = Date.now();
+    if (e.changedTouches.length === 1 && now - lastTapTime.current < 300) {
+      if (scale > 1) {
+        resetZoom();
+      } else {
+        setScale(2);
+      }
+    }
+    lastTapTime.current = now;
+  }, [scale, resetZoom]);
+
+  // Mouse handlers for desktop drag
+  const handleMouseDown = useCallback((e) => {
+    if (scale > 1) {
+      dragStart.current = {
+        x: e.clientX - translate.x,
+        y: e.clientY - translate.y
+      };
+      setIsDragging(true);
+      e.preventDefault();
+    }
+  }, [scale, translate]);
+
+  const handleMouseMove = useCallback((e) => {
+    if (isDragging && scale > 1) {
+      const newX = e.clientX - dragStart.current.x;
+      const newY = e.clientY - dragStart.current.y;
+      setTranslate({ x: newX, y: newY });
+    }
+  }, [isDragging, scale]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleWheel = useCallback((e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      setScale(prev => Math.min(Math.max(prev * delta, 1), 4));
+    }
+  }, []);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -54,20 +170,35 @@ export default function MediaGallery() {
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowRight') navigate('next');
       if (e.key === 'ArrowLeft') navigate('prev');
+      if (e.key === '0' || e.key === 'Escape') resetZoom();
     };
     window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [openIndex, closeLightbox, navigate]);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [openIndex, closeLightbox, navigate, resetZoom, handleMouseMove, handleMouseUp]);
 
   if (openIndex !== null && openIndex !== undefined) {
     const item = mediaItems[currentIndex];
+    const transform = `translate(${translate.x}px, ${translate.y}px) scale(${scale})`;
+    
     return (
       <div 
         className={`lightbox-overlay ${isAnimating ? 'animating' : ''}`}
-        onClick={closeLightbox}
+        onClick={scale > 1 ? undefined : closeLightbox}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onWheel={handleWheel}
         role="dialog"
         aria-modal="true"
         aria-label={`Viewing ${item.title}`}
+        style={{ cursor: scale > 1 ? 'grab' : isDragging ? 'grabbing' : 'default' }}
       >
         <button 
           className="lightbox-close" 
@@ -84,6 +215,8 @@ export default function MediaGallery() {
           className="lightbox-nav lightbox-prev" 
           onClick={(e) => { e.stopPropagation(); navigate('prev'); }}
           aria-label="Previous"
+          disabled={scale > 1}
+          style={{ opacity: scale > 1 ? 0.3 : 1, pointerEvents: scale > 1 ? 'none' : 'auto' }}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="15 18 9 12 15 6"></polyline>
@@ -96,11 +229,18 @@ export default function MediaGallery() {
               src={item.src} 
               alt={item.alt}
               className="lightbox-image"
+              style={{ transform, transformOrigin: 'center center', transition: isAnimating ? 'opacity 0.3s' : 'none', userSelect: 'none' }}
+              draggable={false}
             />
           </div>
           <div className="lightbox-info">
             <span className="lightbox-category">{item.category}</span>
             <h3 className="lightbox-title">{item.title}</h3>
+            {scale > 1 && (
+              <button className="zoom-reset-btn" onClick={(e) => { e.stopPropagation(); resetZoom(); }}>
+                Reset Zoom (100%)
+              </button>
+            )}
           </div>
         </div>
 
@@ -108,6 +248,8 @@ export default function MediaGallery() {
           className="lightbox-nav lightbox-next" 
           onClick={(e) => { e.stopPropagation(); navigate('next'); }}
           aria-label="Next"
+          disabled={scale > 1}
+          style={{ opacity: scale > 1 ? 0.3 : 1, pointerEvents: scale > 1 ? 'none' : 'auto' }}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="9 18 15 12 9 6"></polyline>
@@ -117,6 +259,12 @@ export default function MediaGallery() {
         <div className="lightbox-counter">
           {currentIndex + 1} / {mediaItems.length}
         </div>
+
+        {scale > 1 && (
+          <div className="zoom-indicator">
+            {Math.round(scale * 100)}%
+          </div>
+        )}
       </div>
     );
   }
@@ -278,6 +426,7 @@ export default function MediaGallery() {
           justify-content: center;
           opacity: 1;
           transition: opacity 0.3s ease;
+          touch-action: none;
         }
         .lightbox-overlay.animating {
           opacity: 0;
@@ -320,9 +469,12 @@ export default function MediaGallery() {
           transition: background 0.2s ease, transform 0.2s ease;
           z-index: 10;
         }
-        .lightbox-nav:hover {
+        .lightbox-nav:hover:not(:disabled) {
           background: rgba(255, 255, 255, 0.2);
           transform: translateY(-50%) scale(1.1);
+        }
+        .lightbox-nav:disabled {
+          cursor: not-allowed;
         }
         .lightbox-prev { left: 1.5rem; }
         .lightbox-next { right: 1.5rem; }
@@ -339,6 +491,7 @@ export default function MediaGallery() {
           max-width: 100%;
           max-height: 80vh;
           display: block;
+          touch-action: none;
         }
         .lightbox-info {
           text-align: center;
@@ -357,6 +510,22 @@ export default function MediaGallery() {
           font-weight: 600;
           margin: 0.5rem 0 0;
         }
+        .zoom-reset-btn {
+          margin-top: 1rem;
+          padding: 0.5rem 1rem;
+          background: rgba(59, 130, 246, 0.2);
+          border: 1px solid rgba(59, 130, 246, 0.5);
+          color: #3b82f6;
+          border-radius: 6px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s;
+        }
+        .zoom-reset-btn:hover {
+          background: rgba(59, 130, 246, 0.3);
+          border-color: #3b82f6;
+        }
         .lightbox-counter {
           position: absolute;
           bottom: 1.5rem;
@@ -365,11 +534,26 @@ export default function MediaGallery() {
           color: rgba(255, 255, 255, 0.6);
           font-size: 0.875rem;
         }
+        .zoom-indicator {
+          position: absolute;
+          top: 1.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0, 0, 0, 0.7);
+          color: #fff;
+          padding: 0.375rem 0.875rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          z-index: 10;
+          pointer-events: none;
+        }
         @media (max-width: 640px) {
           .lightbox-nav { width: 44px; height: 44px; }
           .lightbox-prev { left: 0.75rem; }
           .lightbox-next { right: 0.75rem; }
           .lightbox-close { top: 0.75rem; right: 0.75rem; width: 40px; height: 40px; }
+          .lightbox-image { max-height: 70vh; }
         }
       `}</style>
     </section>
